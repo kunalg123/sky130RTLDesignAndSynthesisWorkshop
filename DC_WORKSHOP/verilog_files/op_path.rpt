@@ -1,0 +1,47 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -input_pins
+        -max_paths 1
+        -transition_time
+        -capacitance
+Design : mcp_check
+Version: R-2020.09-SP5
+Date   : Sun Aug  8 14:07:39 2021
+****************************************
+
+Operating Conditions: tt_025C_1v80   Library: sky130_fd_sc_hd__tt_025C_1v80
+Wire Load Model Mode: top
+
+  Startpoint: prod_reg[13]
+              (rising edge-triggered flip-flop clocked by myclk)
+  Endpoint: prod[13] (output port clocked by myclk)
+  Path Group: myclk
+  Path Type: max
+
+  Point                                          Cap     Trans      Incr       Path
+  ------------------------------------------------------------------------------------
+  clock myclk (rise edge)                                         0.0000     0.0000
+  clock network delay (ideal)                                     0.0000     0.0000
+  prod_reg[13]/CLK (sky130_fd_sc_hd__dfrbp_1)           0.0000    0.0000     0.0000 r
+  prod_reg[13]/Q (sky130_fd_sc_hd__dfrbp_1)   0.0049    0.0719    0.3439     0.3439 r
+  U443/A (sky130_fd_sc_hd__buf_6)                       0.0719    0.0000     0.3439 r
+  U443/X (sky130_fd_sc_hd__buf_6)             0.4000    0.7706    0.6217     0.9656 r
+  prod[13] (out)                                        0.7706    0.0000     0.9656 r
+  data arrival time                                                          0.9656
+
+  clock myclk (rise edge)                                         4.0000     4.0000
+  clock network delay (ideal)                                     0.0000     4.0000
+  clock uncertainty                                              -0.5000     3.5000
+  output external delay                                          -2.5000     1.0000
+  data required time                                                         1.0000
+  ------------------------------------------------------------------------------------
+  data required time                                                         1.0000
+  data arrival time                                                         -0.9656
+  ------------------------------------------------------------------------------------
+  slack (MET)                                                                0.0344
+
+
+1

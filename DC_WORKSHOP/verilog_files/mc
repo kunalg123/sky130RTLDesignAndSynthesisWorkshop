@@ -1,0 +1,289 @@
+2.  Synopsys Commands                                        Command Reference
+                                 compile_ultra
+
+NAME
+       compile_ultra
+              Performs  a high-effort compile on the current design for better
+              quality of results (QoR).
+
+SYNTAX
+       status compile_ultra
+               [-incremental]
+               [-scan]
+               [-exact_map]
+               [-no_autoungroup]
+               [-no_seq_output_inversion]
+               [-no_boundary_optimization]
+               [-no_design_rule | -only_design_rule]
+               [-timing_high_effort_script
+                | -area_high_effort_script]
+               [-top]
+               [-retime]
+               [-gate_clock]
+               [-self_gating]
+               [-check_only]
+               [-congestion]
+               [-spg]
+               [-no_auto_layer_optimization]
+
+ARGUMENTS
+       -incremental
+              Runs compile_ultra in  incremental  mode.   In  the  incremental
+              mode, the tool does not run the mapping or implementation selec-
+              tion stages.
+
+       -scan  Enables the examination of the impact of scan insertion on  mis-
+              sion-mode  constraints  during optimization, as in a normal com-
+              pile.  Use this option to replace all sequential elements during
+              optimization.   Some  scan-replaced sequential cells can be con-
+              verted to nonscan cells later  in  the  test  synthesis  process
+              because  of  test  design rule violations or explicit specifica-
+              tions.
+
+       -exact_map
+              Specifies that sequential cells are mapped exactly as  indicated
+              in the HDL code.  Use of the -exact_map option does not mean the
+              QN pin won't be used in the mapped sequential element.   Use  of
+              the -exact_map option would disable sequential output inversion.
+              For more  information,  see  compile_seqmap_enable_output_inver-
+              sion.
+
+       -no_autoungroup
+              Specifies that automatic ungrouping is completely disabled.  All
+              hierarchies are preserved unless otherwise specified.
+
+       -no_seq_output_inversion
+              Disables sequential output inversion.  The phase  sequential  of
+              all sequential elements is the same as in the RTL.  Without this
+              option, compile_ultra is free to invert sequential elements dur-
+              ing mapping and optimization.  For more information, see the man
+              page for the compile_seqmap_enable_output_inversion variable.
+
+       -no_boundary_optimization
+              Specifies that no hierarchical boundary optimization  is  to  be
+              performed.   By default, boundary optimization is turned on dur-
+              ing compile_ultra activity.
+
+              Specifies that no hierarchical boundary optimization  is  to  be
+              performed.   By  default,  the  -no_boundary_optimization option
+              does not disable constant propagation across design hierarchies.
+              To  disable constant propagation with the -no_boundary_optimiza-
+              tion   option,    set    the    compile_enable_constant_propaga-
+              tion_with_no_boundary_opt variable to false.
+
+              This option sets the compile_preserve_subdesign_interfaces vari-
+              able to true.
+
+       -no_design_rule
+              Determines whether the  command  fixes  design  rule  violations
+              before  exiting.   The  -no_design_rule option specifies for the
+              command to exit  before  fixing  design  rule  violations,  thus
+              allowing  you to check the results in a constraint report before
+              fixing the violations.  The default is to  perform  both  design
+              rule fixing and mapping optimizations before exiting.
+
+              The  -no_design_rule  and -only_design_rule options are mutually
+              exclusive.  Use only one option.
+
+       -only_design_rule
+              Determines whether the  command  fixes  design  rule  violations
+              before  exiting.  The -only_design_rule option specifies for the
+              command to perform only design rule  fixing;  that  is,  mapping
+              optimizations are not performed.  The default is to perform both
+              design rule fixing and mapping optimizations before exiting.
+
+              The -no_design_rule and -only_design_rule options  are  mutually
+              exclusive.   Use  only one option.  The -only_design_rule option
+              can be used only with the -incremental option.
+
+       -timing_high_effort_script
+              This option is available in the tool to support backward compat-
+              ibility  with  existing  scripts and is ignored for optimization
+              purposes.
+
+       -area_high_effort_script
+              This option is available in the tool to support backward compat-
+              ibility  with  existing  scripts and is ignored for optimization
+              purposes.
+
+       -top   Fixes design rule and top-level timing violations in  a  design.
+              By  default,  this  option fixes all design rule violations, but
+              only those timing violations whose paths cross top-level hierar-
+              chical boundaries.  If you want this option to fix timing viola-
+              tions for all paths, set the compile_top_all_paths  variable  to
+              true.
+
+       -retime
+              Uses  the  adaptive  retiming  algorithm  during optimization to
+              improve delay.  This option is ignored if the  -only_design_rule
+              option or the -top option is chosen at the same time.
+
+       -gate_clock
+              Enables clock gating optimization: clock gates are automatically
+              inserted or removed.  The -gate_clock option cannot be  used  in
+              combination  with  the -only_design_rule option.  When used with
+              the -exact_map option, it might not be  possible  to  honor  the
+              -exact_map  option  for  those  registers that are involved with
+              clock gating optimization.
+
+              A clock gating cell is not modified or removed if it or its par-
+              ent   hierarchical   cell   is   marked   dont_touch   with  the
+              set_dont_touch command.
+
+       -self_gating
+              Enables the execution of XOR self-gating insertion.
+
+              Self-gating is an XOR based clock gating  technique  that  opti-
+              mizes  dynamic  power by gating the clock signal in those cycles
+              in which the data saved in  a  register  remains  unchanged.  An
+              enable  condition  is computed by comparing the stored data with
+              the new data arriving at the data pin, and that signal  is  used
+              to drive the inserted self-gating cell.
+
+              A  self-gating  cell  can  be shared across several registers by
+              creating a combined enable condition so that the area and  power
+              overhead due to the inserted cells is minimized.
+
+              The  selection of registers to be gated and the grouping of them
+              to form the self-gating banks are driven by the switching activ-
+              ity at the registers' data pins, the timing slack available, and
+              the physical proximity between the registers to be grouped.
+
+              This option is only supported in Design  Compiler  topographical
+              mode.
+
+              The  -self_gating  option cannot be used in combination with the
+              -only_design_rule option.
+
+       -check_only
+              Checks whether the design and libraries have all the  data  that
+              compile_ultra  requires  to  run  successfully.   This option is
+              available only in Design Compiler topographical mode.
+
+       -congestion
+              This option will be obsolete in a future release. See  the  -spg
+              option for information about congestion optimization.
+
+       -spg   This  option  is available only in Design Compiler topographical
+              mode.  Enables physical guidance, congestion  optimization,  and
+              automatic  layer  optimization.  Congestion optimization reduces
+              routing-related congestion.  Physical  guidance  enables  Design
+              Compiler Graphical to save coarse placement information and pass
+              this coarse placement information  to  IC  Compiler.  With  this
+              coarse  placement, IC Compiler can begin the implementation flow
+              with the place_opt command.
+
+              IC Compiler no longer needs to re-create the coarse placement by
+              running  commands  such as create_placement, remove_buffer_tree,
+              or psynopt. By using the Design Compiler coarse placement  as  a
+              starting  point for placement, runtime and area correlation with
+              IC Compiler are improved.
+
+              Design Compiler  Graphical  automatically  performs  layer-aware
+              optimization  when  you  use the -spg option, modeling parasitic
+              variation across metal layers in a way that  benefits  optimiza-
+              tion.  This  optimization helps remove excess pessimism, leading
+              to better area and power.
+
+              In addition to the default  layer-aware  optimization,  you  can
+              also  specify  net constraints for layer optimization by setting
+              specific constraints using the set_net_routing_layer_constraints
+              command or by creating a net-search pattern.
+
+              In the net-search pattern approach, you define a net-search pat-
+              tern by using the  create_net_search_pattern  command  and  then
+              define  associated minimum and maximum routing layer constraints
+              for  the  search  pattern  by  using   the   set_net_search_pat-
+              tern_delay_estimation_options  command.  Design Compiler invokes
+              net-pattern identification after the high-fanout synthesis  step
+              in compile_ultra and assigns the minimum and maximum constraints
+              to the matching nets.  The subsequent optimizations consider the
+              effects of the constraints (for example, the unit resistance and
+              capacitance values of matching nets will change) during  buffer-
+              ing  and  buffer removal. You can define as many net-search pat-
+              terns and associated layer constraints as  needed.  In  general,
+              however,  it  is  recommended  to start with very long nets (for
+              example, 500 um) with top routing layers (for  example,  M7  and
+              M8).  You  should  consider this approach when your design shows
+              significant unit resistance variation (see  RCEX-011  resistance
+              values) across all available routing layers.
+
+              Note  that  the user-constraints and net-pattern layer optimiza-
+              tion methods might affect runtime.
+
+       -no_auto_layer_optimization
+              The -no_auto_layer_optimization option is obsolete.  Running the
+              option has no effect on layer optimization.
+
+DESCRIPTION
+       The compile_ultra command performs a high-effort compile on the current
+       design for better quality of results (QoR).  As with the  compile  com-
+       mand, optimization is controlled by constraints that you specify on the
+       design.  This command is targeted toward high-performance designs  with
+       very  tight timing constraints.  It provides you with a simple approach
+       to achieve critical  delay  optimization.   The  compile_ultra  command
+       packages  all  the  DC  Ultra features and enables them by default.  It
+       requires a DC Ultra license plus a DesignWare Foundation license.  This
+       command  provides the best strategy for optimum overall QoR and perfor-
+       mance.
+
+       When used  in  conjunction  with  the  set_host_options  command,  com-
+       pile_ultra  uses  up  to  the user-specified number of CPU cores on the
+       same computer for parallel  execution.   See  the  description  of  the
+       -max_cores  option  in  the set_host_options man page for more informa-
+       tion.
+
+       This command can be used in the same manner as the compile command.
+
+       By default, compile_ultra incorporates two ungrouping phases for design
+       hierarchies.   The  first phase is performed before "Pass1 Mapping" and
+       attempts to ungroup small design hierarchies.   This  first  ungrouping
+       phase can be turned off using the following command:
+
+         set compile_ultra_ungroup_small_hierarchies false
+
+       The  second ungrouping phase is performed during "Mapping Optimization"
+       and applies a delay-based ungrouping strategy for  design  hierarchies.
+       If you need to preserve all design hierarchies, use the -no_autoungroup
+       option.  If you want to preserve the hierarchies for a specific  block,
+       use the set_ungroup command.
+
+       By default, if dw_foundation.sldb is not in the synthetic_library list,
+       and the DesignWare license  is  successfully  checked  out,  dw_founda-
+       tion.sldb  is  automatically  added to the synthetic_library to use the
+       QoR benefit provided by the licensed  DesignWare  architectures.   This
+       behavior occurs in the current command only, and it does not affect the
+       user-specified synthetic_library and link_library list.
+
+       By default, all DesignWare hierarchies are unconditionally ungrouped in
+       the  second  pass of compile.  You can set the compile_ultra_ungroup_dw
+       variable to control the ungrouping process of DesignWare components.
+
+       By default, hierarchical boundary  optimization  is  performed  on  the
+       design.   This  can  change  the  function of the design so that it can
+       operate only in its current environment.  If input or output ports  are
+       complemented  as  a result of this optimization, port names are changed
+       according  to  the  port_complement_naming_style  variable.   Use   the
+       -no_boundary_optimization  option to turn off the boundary optimization
+       feature.
+
+       By default, the tool applies a compile strategy intended to improve the
+       resulting  area  of the design, possibly at the cost of additional run-
+       time.  The strategy can make changes to variables or  constraints  that
+       modify  compile_ultra behavior and perform additional passes to achieve
+       better area.
+
+EXAMPLES
+       The following example turns off boundary optimization for cell U1:
+
+         prompt> set_boundary_optimization [get_cells U1] false
+         prompt> compile_ultra
+
+SEE ALSO
+       compile(2)
+       set_host_options(2)
+       create_net_search_pattern(2)
+       set_net_search_pattern_delay_estimation_options(2)
+
+                          Version R-2020.09-SP5
+            Copyright (c) 2021 Synopsys, Inc. All rights reserved.
